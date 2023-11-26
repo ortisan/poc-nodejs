@@ -14,8 +14,12 @@ export class CreateUserDto {
   @ApiProperty()
   @IsNotEmpty()
   password: string;
+  @ApiProperty()
+  createdAt?: Date;
+  @ApiProperty()
+  updatedAt?: Date;
 }
 
 
 
-export class UpdateUserDto extends PickType(CreateUserDto, ['email', 'password'] as const) {}
+export class UpdateUserDto extends PickType(CreateUserDto, ['email', 'password'] as const) { }

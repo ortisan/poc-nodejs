@@ -2,17 +2,16 @@ import { Id } from "@/domain/vo/id.vo";
 import { Email } from "@/domain/vo/email.vo";
 import { Name } from "@/domain/vo/name.vo";
 import { Password } from "@/domain/vo/password.vo";
-import { type } from "os";
+import { DateTime } from "../vo/datetime.vo";
 
-export type BaseUserProps = {
+export type UserProps = {
   name: Name,
   email: Email,
   password: Password,
   id?: Id,
-  createdAt?: Date,
-  updatedAt?: Date
+  createdAt?: DateTime,
+  updatedAt?: DateTime
 }
-
 
 
 export class User {
@@ -20,14 +19,15 @@ export class User {
   public readonly name: Name;
   public readonly email: Email;
   public readonly password: Password;
-  public readonly createdAt: Date;
-  public readonly updatedAt: Date;
+  public readonly createdAt: DateTime;
+  public readonly updatedAt: DateTime;
 
-  constructor(name: Name, email: Email, password: Password) {
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+  constructor(props: UserProps) {
+    this.id = props.id || Id.newId();
+    this.name = props.name;
+    this.email = props.email;
+    this.password = props.password;
+    this.createdAt = props.createdAt || DateTime.now();
+    this.updatedAt = props.updatedAt || DateTime.now();
   }
 }

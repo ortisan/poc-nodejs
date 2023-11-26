@@ -12,6 +12,10 @@ export function now(): Dayjs {
   return dayjs();
 }
 
+export function newDayJs(date: Date): Dayjs {
+  return dayjs(date);
+}
+
 export function parseDate(dateTime: string): Dayjs {
   return dayjs(dateTime);
 }

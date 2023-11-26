@@ -11,7 +11,7 @@ export class Id {
     this.value = props.stringValue;
   }
 
-  public static NewId(): Id {
+  public static newId(): Id {
     return new Id({ stringValue: uuidv4() });
   }
 
