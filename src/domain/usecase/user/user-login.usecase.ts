@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Login } from '@/domain/entity/login';
 import { User } from '@/domain/entity/user';
-import { IUserLoginUseCase } from '@/domain/usecase/user.interface';
-import { IUserRepository } from '@/domain/repository/user.repository';
+import { AbstractUserLoginUseCase } from '@/domain/usecase/user/user.interface';
+import { AbstractUserRepository } from '@/domain/repository/user.repository';
 import { NotFoundError } from '@/shared/error/not-found.error';
 
 @Injectable()
-export class UserLoginUseCase implements IUserLoginUseCase {
+export class UserLoginUseCase implements AbstractUserLoginUseCase {
 
-  constructor(public readonly userRepository: IUserRepository) {
+  constructor(public readonly userRepository: AbstractUserRepository) {
     this.userRepository = userRepository;
   }
 

@@ -1,10 +1,10 @@
 import { User } from "@/domain/entity/user";
 import { Login } from "@/domain/entity/login";
 
-export interface IUserSigninUseCase {
+export abstract class AbstractUserSigninUseCase {
   execute: (user: User) => Promise<User>;
 }
 
-export interface IUserLoginUseCase {
+export abstract class AbstractUserLoginUseCase {
   execute: (login: Login) => Promise<User>;
 }
