@@ -6,13 +6,18 @@ import {
 import { AppModule } from '@/app.module';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Tracer } from '@/infrastructure/observability/tracer';
 
 async function bootstrap() {
+
+  const tracer = new Tracer()
+  tracer.init()
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter()
   );
-  
+
   // Validation
   app.useGlobalPipes(new ValidationPipe());
 
@@ -26,6 +31,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(8000);
 }
+
 bootstrap();
