@@ -73,9 +73,10 @@ services:
       - JAEGER_SAMPLER_PARAM=1
     volumes:
       - ./etc/loki.yaml:/etc/loki/loki.yaml
-      - ./data/loki-data:/tmp/loki
     networks:
       - poc
+    depends_on:
+      - tempo
 
   prometheus:
     image: prom/prometheus:latest
@@ -89,7 +90,6 @@ services:
       - "9090:9090"
     networks:
       - poc
-
 
   promtail:
     image: grafana/promtail:latest
@@ -112,6 +112,43 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /etc/grafana/provisioning/datasources
+        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+        apiVersion: 1
+        datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy 
+          orgId: 1
+          url: http://prometheus:9090
+          basicAuth: false
+          isDefault: true
+          version: 1
+          editable: true
+        - name: Loki
+          type: loki
+          access: proxy 
+          orgId: 1
+          url: http://loki:3100
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: true
+        - name: Tempo
+          type: tempo
+          access: proxy 
+          orgId: 1
+          url: http://tempo:3200
+          basicAuth: false
+          isDefault: false
+          version: 1
+          editable: true
+        EOF
+        /run.sh
     ports:
       - "3000:3000"
     networks:
@@ -126,8 +163,8 @@ services:
       context: ../
       dockerfile: ./docker/Dockerfile
     environment:
-      - OTEL_SERVICE_NAME=node-app
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public
+      - OTEL_SERVICE_NAME=node-app  
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public    
     ports:
       - "8000:8000"
     deploy:
