@@ -4,30 +4,19 @@ import { registerInstrumentations } from '@opentelemetry/instrumentation';
 import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { FastifyInstrumentation } from '@opentelemetry/instrumentation-fastify';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
-// import { PrometheusMetricService } from './prometheus.service';
-import { AbstractMetricService } from '@/shared/observability/metric.service';
 import { OpenTelemetryModule } from 'nestjs-otel';
-
-// @Module({
-//   providers: [
-//     {
-//       provide: AbstractMetricService,
-//       useClass: PrometheusMetricService,
-//     },
-//   ],
-//   exports: [
-//     {
-//       provide: AbstractMetricService,
-//       useClass: PrometheusMetricService,
-//     },
-//   ],
-// })
 
 const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
   metrics: {
     hostMetrics: true,
     apiMetrics: {
       enable: true,
+      defaultAttributes: {
+        // You can set default labels for api metrics
+        custom: 'label',
+      },
+      ignoreRoutes: ['/favicon.ico'], // You can ignore specific routes (See https://docs.nestjs.com/middleware#excluding-routes for options)
+      ignoreUndefinedRoutes: false, //Records metrics for all URLs, even undefined ones
     },
   },
 });
@@ -49,7 +38,7 @@ class InstrumentationConfigModule {
 }
 
 @Module({
-  imports: [OpenTelemetryModuleConfig, InstrumentationConfigModule],
+  imports: [InstrumentationConfigModule, OpenTelemetryModuleConfig],
   controllers: [],
   providers: [],
 })

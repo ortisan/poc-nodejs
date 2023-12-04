@@ -7,14 +7,29 @@ receivers:
           allowed_origins:
             - http://*
             - https://*
+
 exporters:
-  otlp:
+  tempo:
     endpoint: tempo:4317
     tls:
       insecure: true
+  
+  prometheus:
+    endpoint: 'prometheus:9090'
+    namespace: test-space
+    const_labels:
+      label1: value1
+      'another label': spaced value
+    send_timestamps: true
+    metric_expiration: 180m
+    resource_to_telemetry_conversion:
+      enabled: true
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp]
+      exporters: [tempo]
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]

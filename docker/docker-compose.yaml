@@ -105,6 +105,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     volumes:
+      - ./etc/grafana-ds.yaml:/etc/grafana/provisioning/datasources/ds.yaml
       - ./data/grafana/datasources:/etc/grafana/provisioning/datasources
       - ./data/grafana/dashboards-provisioning:/etc/grafana/provisioning/dashboards
       - ./data/grafana/dashboards:/var/lib/grafana/dashboards
@@ -112,43 +113,6 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_DISABLE_LOGIN_FORM=true
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Prometheus
-          type: prometheus
-          access: proxy 
-          orgId: 1
-          url: http://prometheus:9090
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: true
-        - name: Loki
-          type: loki
-          access: proxy 
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: false
-          version: 1
-          editable: true
-        - name: Tempo
-          type: tempo
-          access: proxy 
-          orgId: 1
-          url: http://tempo:3200
-          basicAuth: false
-          isDefault: false
-          version: 1
-          editable: true
-        EOF
-        /run.sh
     ports:
       - "3000:3000"
     networks:

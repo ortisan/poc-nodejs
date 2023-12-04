@@ -1,7 +1,5 @@
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
-import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
-import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { AsyncLocalStorageContextManager } from '@opentelemetry/context-async-hooks';
 import * as process from 'process';
@@ -15,13 +13,22 @@ import { B3InjectEncoding, B3Propagator } from '@opentelemetry/propagator-b3';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { Resource } from '@opentelemetry/resources';
-
-const metricReader = new PrometheusExporter({
-  port: 8081,
-});
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-proto';
+import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 
 const traceExporter = new OTLPTraceExporter({
   url: 'http://otel-collector:4318/v1/traces',
+  concurrencyLimit: 10
+});
+
+const metricExporter = new OTLPMetricExporter({
+  url: 'http://otel-collector:4318/v1/metrics',
+  concurrencyLimit: 10
+});
+
+const metricReader = new PeriodicExportingMetricReader({
+  exporter: metricExporter,
+  exportIntervalMillis: 1000,
 });
 
 const spanProcessor = new BatchSpanProcessor(traceExporter);
@@ -31,10 +38,10 @@ const otelSDK = new NodeSDK({
     [SemanticResourceAttributes.SERVICE_NAME]: 'node app',
     [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
   }),
-  metricReader,
   spanProcessor: spanProcessor,
+  metricReader: metricReader,
   contextManager: new AsyncLocalStorageContextManager(),
-  instrumentations: [getNodeAutoInstrumentations()],
+  instrumentations: [getNodeAutoInstrumentations(), new NestInstrumentation()],
   textMapPropagator: new CompositePropagator({
     propagators: [
       new HttpTraceContextPropagator(),
