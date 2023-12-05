@@ -7,13 +7,15 @@ import { NotFoundError } from '@/shared/error/not-found.error';
 
 @Injectable()
 export class UserLoginUseCase implements IUserLoginUseCase {
-
   constructor(public readonly userRepository: AbstractUserRepository) {
     this.userRepository = userRepository;
   }
 
   async execute(login: Login): Promise<User> {
-    const user = await this.userRepository.findByEmailAndPassword(login.email, login.password);
+    const user = await this.userRepository.findByEmailAndPassword(
+      login.email,
+      login.password,
+    );
     if (!user) {
       throw new NotFoundError('User not found');
     }

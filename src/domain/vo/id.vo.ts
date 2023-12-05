@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
 type IdProps = {
-  stringValue: string
-}
+  stringValue: string;
+};
 
 export class Id {
   private readonly value: string;
@@ -18,5 +18,4 @@ export class Id {
   public getValue(): string {
     return this.value;
   }
-
 }

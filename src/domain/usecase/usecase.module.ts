@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { UserLoginUseCase } from '@/domain/usecase/user/user-login.usecase';
-import { IUserLoginUseCase, IUserSigninUseCase } from '@/domain/usecase/user/user.interface';
+import {
+  IUserLoginUseCase,
+  IUserSigninUseCase,
+} from '@/domain/usecase/user/user.interface';
 import { UserSigninUseCase } from '@/domain/usecase/user/user-signin.usecase';
 import { DatabaseModule } from '@/infrastructure/database/database.module';
-
 
 @Module({
   imports: [DatabaseModule],
@@ -28,4 +30,4 @@ import { DatabaseModule } from '@/infrastructure/database/database.module';
     },
   ],
 })
-export class UseCaseModule { }
+export class UseCaseModule {}

@@ -1,7 +1,7 @@
-import { User } from "../entity/user";
-import { Email } from "../vo/email.vo";
-import { Id } from "../vo/id.vo";
-import { Password } from "../vo/password.vo";
+import { User } from '../entity/user';
+import { Email } from '../vo/email.vo';
+import { Id } from '../vo/id.vo';
+import { Password } from '../vo/password.vo';
 
 export abstract class AbstractUserRepository {
   create: (user: User) => Promise<User>;

@@ -5,7 +5,6 @@ import { AbstractUserRepository } from '@/domain/repository/user.repository';
 
 @Injectable()
 export class UserSigninUseCase implements IUserSigninUseCase {
-
   constructor(public readonly userRepository: AbstractUserRepository) {
     this.userRepository = userRepository;
   }

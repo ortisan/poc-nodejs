@@ -14,4 +14,4 @@ import { Module, RequestMethod } from '@nestjs/common';
   controllers: [],
   providers: [],
 })
-export class LoggerModule { }
+export class LoggerModule {}

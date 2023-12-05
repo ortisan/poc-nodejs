@@ -1,6 +1,6 @@
 type EmailProps = {
-  stringValue: string
-}
+  stringValue: string;
+};
 
 export class Email {
   private readonly value: string;

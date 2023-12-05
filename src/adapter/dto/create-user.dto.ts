@@ -1,6 +1,6 @@
-import { PickType } from "@nestjs/mapped-types";
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty } from "class-validator";
+import { PickType } from '@nestjs/mapped-types';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -20,6 +20,7 @@ export class CreateUserDto {
   updatedAt?: Date;
 }
 
-
-
-export class UpdateUserDto extends PickType(CreateUserDto, ['email', 'password'] as const) { }
+export class UpdateUserDto extends PickType(CreateUserDto, [
+  'email',
+  'password',
+] as const) {}

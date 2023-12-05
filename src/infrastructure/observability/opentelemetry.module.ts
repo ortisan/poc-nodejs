@@ -42,5 +42,4 @@ class InstrumentationConfigModule {
   controllers: [],
   providers: [],
 })
-export class OpenTelemetryConfigModule { }
-
+export class OpenTelemetryConfigModule {}

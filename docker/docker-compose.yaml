@@ -122,24 +122,24 @@ services:
       - tempo
       - loki
 
-  app:
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
-    environment:
-      - OTEL_SERVICE_NAME=node-app  
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public    
-    ports:
-      - "8000:8000"
-    deploy:
-      resources:
-        reservations:
-          cpus: '0.5'
-          memory: 512M  
-        limits:
-          cpus: '1'
-          memory: 1024M
-    networks:
-      - poc
-    depends_on:
-      - postgres
+  # app:
+  #   build:
+  #     context: ../
+  #     dockerfile: ./docker/Dockerfile
+  #   environment:
+  #     - OTEL_SERVICE_NAME=node-app  
+  #     - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres?schema=public    
+  #   ports:
+  #     - "8000:8000"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         cpus: '0.5'
+  #         memory: 512M  
+  #       limits:
+  #         cpus: '1'
+  #         memory: 1024M
+  #   networks:
+  #     - poc
+  #   depends_on:
+  #     - postgres

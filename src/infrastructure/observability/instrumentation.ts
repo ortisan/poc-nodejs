@@ -18,12 +18,12 @@ import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics';
 
 const traceExporter = new OTLPTraceExporter({
   url: 'http://otel-collector:4318/v1/traces',
-  concurrencyLimit: 10
+  concurrencyLimit: 10,
 });
 
 const metricExporter = new OTLPMetricExporter({
   url: 'http://otel-collector:4318/v1/metrics',
-  concurrencyLimit: 10
+  concurrencyLimit: 10,
 });
 
 const metricReader = new PeriodicExportingMetricReader({
@@ -50,8 +50,8 @@ const otelSDK = new NodeSDK({
       new B3Propagator({
         injectEncoding: B3InjectEncoding.MULTI_HEADER,
       }),
-    ]
-  })
+    ],
+  }),
 });
 
 export default otelSDK;
