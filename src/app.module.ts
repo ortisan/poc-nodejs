@@ -13,8 +13,7 @@ import { InputAssemblersModule } from './adapter/input/assemblers/input.assemble
     InputAssemblersModule,
     DatabaseModule,
     UseCaseModule,
-    LoggerModule,
   ],
   controllers: [UserController],
 })
-export class AppModule {}
+export class AppModule { }

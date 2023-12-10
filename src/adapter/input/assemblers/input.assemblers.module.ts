@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ApiCreateUserAssembler } from './api-create-user.assembler';
 
 @Module({
-  imports: [ApiCreateUserAssembler],
-  controllers: [],
-  providers: [],
+  providers: [ApiCreateUserAssembler],
+  exports: [ApiCreateUserAssembler],
 })
-export class InputAssemblersModule {}
+export class InputAssemblersModule { }

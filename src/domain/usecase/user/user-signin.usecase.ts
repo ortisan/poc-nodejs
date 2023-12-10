@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from '@/domain/entity/user';
-import { IUserSigninUseCase } from '@/domain/usecase/user/user.interface';
-import { AbstractUserRepository } from '@/domain/repository/user.repository';
+import { IUserSigninUseCase } from '@/domain/usecase/user/user.contract';
+import { IUserRepository } from '@/domain/repository/user.repository.contract';
 
 @Injectable()
 export class UserSigninUseCase implements IUserSigninUseCase {
-  constructor(public readonly userRepository: AbstractUserRepository) {
+  constructor(@Inject("IUserRepository") public readonly userRepository: IUserRepository) {
     this.userRepository = userRepository;
   }
 

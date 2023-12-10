@@ -4,20 +4,22 @@ import {
   Param,
   Post,
   Get,
+  Logger,
+  Inject,
 } from '@nestjs/common';
 import { ApiCreateUserAssembler } from '@/adapter/input/assemblers/api-create-user.assembler';
 import { CreateUserDto } from '@/adapter/dto/create-user.dto';
-import { AbstractUserRepository } from '@/domain/repository/user.repository';
-import { IUserSigninUseCase } from '@/domain/usecase/user/user.interface';
+import { IUserSigninUseCase } from '@/domain/usecase/user/user.contract';
 import { Id } from '@/domain/vo/id.vo';
 import { OtelMethodCounter, Span, TraceService } from 'nestjs-otel';
+import { IUserRepository } from '@/domain/repository/user.repository.contract';
 
 @Controller('api/user')
 export class UserController {
   constructor(
     private readonly assembler: ApiCreateUserAssembler,
-    private readonly userSigninUseCase: IUserSigninUseCase,
-    private readonly userRepository: AbstractUserRepository,
+    @Inject("IUserSigninUseCase") private readonly userSigninUseCase: IUserSigninUseCase,
+    @Inject("IUserRepository") private readonly userRepository: IUserRepository,
   ) { }
 
   @Post()
