@@ -1,63 +1,81 @@
-import { ErrorDto } from "@/shared/error/dto/error.dto";
+import { CauseDto, ErrorDto } from "@/shared/error/dto/error.dto";
 import { BadRequestError, NotFoundError, GenericError, NotAuthorizedError, UnprocessableEntityError } from "@/shared/error/errors";
-import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
+import { ILocaleService } from "@/shared/i18n/locale.service.contract";
+import { ArgumentsHost, Catch, ExceptionFilter, Inject } from "@nestjs/common";
 import { FastifyReply } from 'fastify';
 
-@Catch(Error)
-export class HttpGenericExceptionFilter implements ExceptionFilter {
-  catch(error: Error, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const errorDto = new ErrorDto({ message: error.message ?? 'Internal server error' });
+const acceptLanguageHeader = 'accept-language';
+
+abstract class AbstractBaseExceptionFilter implements ExceptionFilter {
+  constructor(@Inject("ILocaleService") private readonly localeService: ILocaleService) {
+  }
+
+  catch(exception: any, host: ArgumentsHost) {
+    throw new Error("Method not implemented.");
+  }
+
+  catchError(error: GenericError, host: ArgumentsHost, statusCode: number) {
+    const language = this.getAcceptLanguageHeader(host);
+    const errorDto = this.translateError(GenericError.fromError(error), language);
     const response = host.switchToHttp().getResponse<FastifyReply>();
-    response.status(500).send(errorDto)
+    response.status(statusCode).send(errorDto)
+  }
+
+  translateError(exception: GenericError, language: string): ErrorDto {
+    const causes = exception.causes?.map(cause => {
+      return new CauseDto({ code: cause.code, message: this.localeService.getMessage(language, cause.code, cause.arguments), arguments: cause.arguments });
+    });
+    return new ErrorDto({ message: exception.message, causes });
+  }
+
+  getAcceptLanguageHeader(host: ArgumentsHost): string {
+    const ctx = host.switchToHttp();
+    const request = ctx.getRequest();
+    return request.headers[acceptLanguageHeader] as string;
+  }
+}
+
+
+@Catch(Error, GenericError)
+export class HttpGenericExceptionFilter extends AbstractBaseExceptionFilter {
+  catch(error: Error | GenericError, host: ArgumentsHost) {
+    super.catchError(GenericError.fromError(error), host, 500);
   }
 }
 
 @Catch(BadRequestError)
-export class HttpBadRequestExceptionFilter implements ExceptionFilter {
+export class HttpBadRequestExceptionFilter extends HttpGenericExceptionFilter {
   catch(error: BadRequestError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const errorDto = new ErrorDto({ message: error.message ?? 'Bad request error' });
-    const response = host.switchToHttp().getResponse<FastifyReply>();
-    response.status(400).send(errorDto)
+    super.catchError(error, host, 400);
   }
 }
 
 @Catch(NotFoundError)
-export class HttpNotFoundExceptionFilter implements ExceptionFilter {
+export class HttpNotFoundExceptionFilter extends HttpGenericExceptionFilter {
   catch(error: NotFoundError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const errorDto = new ErrorDto({ message: error.message ?? 'Not found' });
-    const response = host.switchToHttp().getResponse<FastifyReply>();
-    response.status(404).send(errorDto)
+    super.catchError(error, host, 404);
   }
 }
 
 @Catch(NotAuthorizedError)
-export class HttpNotAuthorizedExceptionFilter implements ExceptionFilter {
+export class HttpNotAuthorizedExceptionFilter extends HttpGenericExceptionFilter {
   catch(error: NotAuthorizedError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const errorDto = new ErrorDto({ message: error.message ?? 'Not found' });
-    const response = host.switchToHttp().getResponse<FastifyReply>();
-    response.status(404).send(errorDto)
+    super.catchError(error, host, 401);
   }
 }
 
 @Catch(UnprocessableEntityError)
-export class HttpUnprocessableEntityExceptionFilter implements ExceptionFilter {
+export class HttpUnprocessableEntityExceptionFilter extends HttpGenericExceptionFilter {
   catch(error: UnprocessableEntityError, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const errorDto = new ErrorDto({ message: error.message ?? 'Not found' });
-    const response = host.switchToHttp().getResponse<FastifyReply>();
-    response.status(422).send(errorDto)
+    super.catchError(error, host, 422);
   }
 }
 
-export const exceptionFilters = [
-  new HttpGenericExceptionFilter(),
-  new HttpBadRequestExceptionFilter(),
-  new HttpNotFoundExceptionFilter(),
-  new HttpNotAuthorizedExceptionFilter(),
-  new HttpUnprocessableEntityExceptionFilter(),
+export const getExceptionFilters = (localeService: ILocaleService) => [
+  new HttpGenericExceptionFilter(localeService),
+  new HttpBadRequestExceptionFilter(localeService),
+  new HttpNotFoundExceptionFilter(localeService),
+  new HttpNotAuthorizedExceptionFilter(localeService),
+  new HttpUnprocessableEntityExceptionFilter(localeService),
 ];
 

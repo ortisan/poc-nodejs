@@ -1,0 +1,12 @@
+{
+  "user-not-found": "Usuário não encontrado",
+  "user-disabled": "Usuário desabilitado",
+  "invalid-email": "Email inválido",
+  "email-already-in-use": "Email já está em uso",
+  "operation-not-allowed": "Operação não permitida",
+  "weak-password": "Senha fraca",
+  "invalid-argument": "Argumento inválido",
+  "requires-recent-login": "Requer login recente",
+  "user-mismatch": "Usuário não encontrado",
+  "credential-already-in-use": "Credencial já está em uso"
+}

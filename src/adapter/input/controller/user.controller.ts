@@ -13,6 +13,8 @@ import { IUserSigninUseCase } from '@/domain/usecase/user/user.contract';
 import { Id } from '@/domain/vo/id.vo';
 import { OtelMethodCounter, Span, TraceService } from 'nestjs-otel';
 import { IUserRepository } from '@/domain/repository/user.repository.contract';
+import { NotFoundError } from '@/shared/error/errors';
+import { CauseDto } from '@/shared/error/dto/error.dto';
 
 @Controller('api/user')
 export class UserController {
@@ -38,6 +40,9 @@ export class UserController {
     const user = await this.userRepository.findById(
       new Id({ stringValue: id }),
     );
+    if (!user) {
+      throw new NotFoundError('User not found', [new CauseDto({ code: 'user-not-found', message: 'User not found', arguments: [{ id }] })]);
+    }
     return this.assembler.toDto(user);
   }
 }
