@@ -4,6 +4,13 @@ export class GenericError extends Error {
   constructor(message: string, public readonly causes?: CauseDto[]) {
     super(message);
   }
+
+  static fromError(error: Error): GenericError {
+    if (error instanceof GenericError) {
+      return error;
+    }
+    return new GenericError(error.message);
+  }
 }
 
 export class BadRequestError extends GenericError {

@@ -8,6 +8,8 @@ import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import otelSDK from './infrastructure/observability/instrumentation';
 import { Logger } from 'nestjs-pino';
+import { ILocaleService } from './shared/i18n/locale.service.contract';
+import { getExceptionFilters } from './infrastructure/error/nestjs/http.exception.filter';
 
 async function bootstrap() {
   await otelSDK.start();
@@ -23,6 +25,9 @@ async function bootstrap() {
   app.enableCors({ origin: '*' });
   // Validation
   app.useGlobalPipes(new ValidationPipe());
+  // Locale and Error Handler
+  const localeService = app.get<ILocaleService>("ILocaleService");
+  app.useGlobalFilters(...getExceptionFilters(localeService))
 
   // Swagger
   const config = new DocumentBuilder()

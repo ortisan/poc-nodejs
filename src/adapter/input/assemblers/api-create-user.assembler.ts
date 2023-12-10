@@ -5,8 +5,10 @@ import { Email } from '@/domain/vo/email.vo';
 import { Id } from '@/domain/vo/id.vo';
 import { Name } from '@/domain/vo/name.vo';
 import { Password } from '@/domain/vo/password.vo';
+import { IInputAssembler } from './assembler.contract';
 
-export class ApiCreateUserAssembler {
+export class ApiCreateUserAssembler implements IInputAssembler<CreateUserDto, User> {
+
   public toDomain(createUserDto: CreateUserDto): User {
     return new User({
       id: new Id({ stringValue: createUserDto.id ?? Id.newId().getValue() }),

@@ -5,8 +5,10 @@ import { Id } from '@/domain/vo/id.vo';
 import { Name } from '@/domain/vo/name.vo';
 import { Password } from '@/domain/vo/password.vo';
 import { user as UserModel } from '@prisma/client';
+import { IPrismaAssembler } from './prisma.assembler.contract';
 
-export class PrismaUserAssembler {
+export class PrismaUserAssembler implements IPrismaAssembler<UserModel, User> {
+
   public toDomain(userPrismaModel: UserModel): User {
     return new User({
       id: new Id({ stringValue: userPrismaModel.id }),
