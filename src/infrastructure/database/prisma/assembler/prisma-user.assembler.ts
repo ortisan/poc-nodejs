@@ -6,8 +6,8 @@ import { Name } from '@/domain/vo/name.vo';
 import { Password } from '@/domain/vo/password.vo';
 import { user as UserModel } from '@prisma/client';
 
-export class PrismaUserMapper {
-  public static toDomain(userPrismaModel: UserModel): User {
+export class PrismaUserAssembler {
+  public toDomain(userPrismaModel: UserModel): User {
     return new User({
       id: new Id({ stringValue: userPrismaModel.id }),
       name: new Name({ stringValue: userPrismaModel.name }),
@@ -18,7 +18,7 @@ export class PrismaUserMapper {
     });
   }
 
-  public static toPrismaModel(user: User): UserModel {
+  public toPrismaModel(user: User): UserModel {
     return {
       id: user.id.getValue(),
       name: user.name.getValue(),

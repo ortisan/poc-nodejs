@@ -1,29 +1,28 @@
 import { Module } from '@nestjs/common';
 import { UserLoginUseCase } from '@/domain/usecase/user/user-login.usecase';
-import { AbstractUserLoginUseCase, AbstractUserSigninUseCase } from '@/domain/usecase/user/user.interface';
 import { UserSigninUseCase } from '@/domain/usecase/user/user-signin.usecase';
 import { DatabaseModule } from '@/infrastructure/database/database.module';
-
+import { IUserLoginUseCase, IUserSigninUseCase } from './user/user.contract';
 
 @Module({
   imports: [DatabaseModule],
   providers: [
     {
-      provide: AbstractUserSigninUseCase,
+      provide: "IUserSigninUseCase",
       useClass: UserSigninUseCase,
     },
     {
-      provide: AbstractUserLoginUseCase,
+      provide: "IUserLoginUseCase",
       useClass: UserLoginUseCase,
     },
   ],
   exports: [
     {
-      provide: AbstractUserSigninUseCase,
+      provide: "IUserSigninUseCase",
       useClass: UserSigninUseCase,
     },
     {
-      provide: AbstractUserLoginUseCase,
+      provide: "IUserLoginUseCase",
       useClass: UserLoginUseCase,
     },
   ],

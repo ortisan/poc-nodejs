@@ -6,19 +6,23 @@ import { Id } from '@/domain/vo/id.vo';
 import { Name } from '@/domain/vo/name.vo';
 import { Password } from '@/domain/vo/password.vo';
 
-export class ApiCreateUserMapper {
-  public static toDomain(createUserDto: CreateUserDto): User {
+export class ApiCreateUserAssembler {
+  public toDomain(createUserDto: CreateUserDto): User {
     return new User({
       id: new Id({ stringValue: createUserDto.id ?? Id.newId().getValue() }),
       name: new Name({ stringValue: createUserDto.name }),
       email: new Email({ stringValue: createUserDto.email }),
       password: new Password({ stringValue: createUserDto.password }),
-      createdAt: new DateTime({ dateValue: createUserDto.createdAt ?? new Date() }),
-      updatedAt: new DateTime({ dateValue: createUserDto.updatedAt ?? new Date() }),
+      createdAt: new DateTime({
+        dateValue: createUserDto.createdAt ?? new Date(),
+      }),
+      updatedAt: new DateTime({
+        dateValue: createUserDto.updatedAt ?? new Date(),
+      }),
     });
   }
 
-  public static toDto(user: User): CreateUserDto {
+  public toDto(user: User): CreateUserDto {
     return {
       id: user.id.getValue(),
       name: user.name.getValue(),

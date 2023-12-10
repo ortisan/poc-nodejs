@@ -2,17 +2,25 @@ import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from "@nestjs/platform-fastify";
+} from '@nestjs/platform-fastify';
 import { AppModule } from '@/app.module';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import otelSDK from './infrastructure/observability/instrumentation';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
+  await otelSDK.start();
+  console.log('Started OTEL SDK');
+
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter(),
   );
-  
+  app.useLogger(app.get(Logger));
+
+  app.enableShutdownHooks();
+  app.enableCors({ origin: '*' });
   // Validation
   app.useGlobalPipes(new ValidationPipe());
 
@@ -26,6 +34,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(process.env.APP_PORT || 8000, '0.0.0.0');
 }
+
 bootstrap();

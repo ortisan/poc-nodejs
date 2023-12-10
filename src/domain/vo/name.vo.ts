@@ -1,6 +1,6 @@
 export type NameProps = {
-  stringValue: string
-}
+  stringValue: string;
+};
 
 export class Name {
   private readonly value: string;

@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-
 import { PrismaService } from './prisma/prisma.service';
-import { AbstractUserRepository } from "@/domain/repository/user.repository";
 import { PrismaUserRepository } from './prisma/repository/prisma-user.repository';
+import { PrismaUserAssembler } from './prisma/assembler/prisma-user.assembler';
 
 @Module({
   providers: [
     PrismaService,
+    PrismaUserAssembler,
     {
-      provide: AbstractUserRepository,
+      provide: "IUserRepository",
       useClass: PrismaUserRepository,
     },
   ],
   exports: [
     {
-      provide: AbstractUserRepository,
+      provide: "IUserRepository",
       useClass: PrismaUserRepository,
     },
   ],

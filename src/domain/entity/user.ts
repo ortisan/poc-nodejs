@@ -1,18 +1,17 @@
-import { Id } from "@/domain/vo/id.vo";
-import { Email } from "@/domain/vo/email.vo";
-import { Name } from "@/domain/vo/name.vo";
-import { Password } from "@/domain/vo/password.vo";
-import { DateTime } from "../vo/datetime.vo";
+import { Id } from '@/domain/vo/id.vo';
+import { Email } from '@/domain/vo/email.vo';
+import { Name } from '@/domain/vo/name.vo';
+import { Password } from '@/domain/vo/password.vo';
+import { DateTime } from '../vo/datetime.vo';
 
 export type UserProps = {
-  name: Name,
-  email: Email,
-  password: Password,
-  id?: Id,
-  createdAt?: DateTime,
-  updatedAt?: DateTime
-}
-
+  name: Name;
+  email: Email;
+  password: Password;
+  id?: Id;
+  createdAt?: DateTime;
+  updatedAt?: DateTime;
+};
 
 export class User {
   public readonly id: Id;
