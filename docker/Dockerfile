@@ -9,10 +9,11 @@ COPY ./package*.json ./
 COPY ./tsconfig*.json ./
 COPY ./prisma ./prisma/
 COPY ./.env.prod ./.env
-COPY ./src ./src/
+COPY .apps/ ./apps/
+COPY .libs/ ./libs/
 RUN npm ci
 
-RUN npm run build
+RUN npm run build web
 
 # ---
 
@@ -31,4 +32,4 @@ EXPOSE 8000
 
 RUN ls -lah ./dist
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start-web:prod"]

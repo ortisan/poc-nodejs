@@ -12,16 +12,32 @@ Generate Prisma Models
 prisma generate
 ```  
 
+### Starts NestJs Application
+
 ```bash
 # development
-$ npm run start
+$ npm run start-web
 
 # watch mode
-$ npm run start:dev
+$ npm run start-web:dev
 
 # production mode
-$ npm run start:prod
+$ npm run start-web:prod
 ```
+
+### Debug Lambdas
+
+Install lambda-local globally
+
+```bash
+npm install -g lambda-local
+```
+
+Run lambda-local
+
+```bash
+lambda-local -l dist/apps/audit-function/main.js -h handler -e debug/sqs/event.json
+```	
 
 ## Test
 
