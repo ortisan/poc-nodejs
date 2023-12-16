@@ -19,8 +19,14 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@web/*": [
+        "apps/web/src/*"
+      ],
+      "@core": [
+        "libs/core/src"
+      ],
+      "@core/*": [
+        "libs/core/src/*"
       ]
     }
   }
